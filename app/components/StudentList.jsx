@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 const Post = () => {
   const [posts, setPosts] = useState([]);
   const [edtitingId, setEditingId] = useState(null); // ID to track the ID of the post being edited
+  
   const [editingFullName, setEditingFullName] = useState(""); // To store the student's full name or Post being editied
   const [editingDOB, setEditingDOB] = useState("");     // To store the student's DOB
   const [editingGPA, setEditingGPA] = useState("");      // To store the student's GPA
@@ -14,9 +15,41 @@ const Post = () => {
       .then((response) => response.json()) // Converting the response to JSON
       .then((response) => setPosts(response)); // Setting the posts state with the data from the response
   }, []); // Dependency array to re-run the effect when the posts state changes
+
+  // Helper function for input validation
+  const validateInput = (fullName, dob, gpa) => {
+    // Full name validation: Only alphabets and spaces
+    if (!/^[A-Za-z\s]+$/.test(fullName)) {
+      return "Full name should contain only letters and spaces.";
+    }
+
+    // Date of birth validation: YYYY-MM-DD format and not a future date
+    const dobRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dobRegex.test(dob)) {
+      return "Date of Birth must be in YYYY-MM-DD format.";
+    }
+    const date = new Date(dob);
+    const today = new Date();
+    if (date > today) {
+      return "Date of Birth cannot be a future date.";
+    }
+
+    // GPA validation: Must be a number between 0.0 and 4.0
+    const gpaNum = parseFloat(gpa);
+    if (isNaN(gpaNum) || gpaNum < 0.0 || gpaNum > 4.0) {
+      return "GPA must be a number between 0.0 and 4.0.";
+    }
+
+    return ""; // No validation errors
+  };
  
   // This is how we post data to the server
   const addStudent = (fullName, dob, gpa) => {
+    const errorMessage = validateInput(fullName, dob, gpa);
+    if (errorMessage) {
+      setError(errorMessage);
+      return;
+    }
     // Function to add a new post
     fetch("http://localhost:3300/students", {
       // Sending a POST request to the backend to add a new post
@@ -37,6 +70,11 @@ const Post = () => {
   };
  
   const updatePost = (id, fullName, dob, gpa) => {
+    const errorMessage = validateInput(fullName, dob, gpa);
+    if (errorMessage) {
+      setError(errorMessage);
+      return;
+    }
     fetch(`http://localhost:3300/students/${id}`, {
       // Sending a PUT request to the backend to update a post)
       method: "PUT", // Setting the request method as PUT
@@ -52,8 +90,9 @@ const Post = () => {
     setEditingFullName("");
     setEditingDOB("");
     setEditingGPA("");
+    setError("");
   };
- 
+  
   const deletePost = (id) => {
     fetch(`http://localhost:3300/students/${id}`, {
       // Sending a DELETE request to the backend to delete a post
@@ -72,12 +111,7 @@ const Post = () => {
     const fullName = formData.get("fullName").trim();    //This will need to update to take in a full name
     const dob = formData.get("DOB").trim();
     const gpa = formData.get("GPA").trim();
-    if (!fullName || !dob || !gpa) {    //Should we allow incomplete submission?
-      // Error handling if the fullName is empty
-      setError("All fields must be filled out");
-      return;
-    }
-    setError(""); // setting the error message state to empty
+    
     addStudent(fullName, dob, gpa); // Calling the addStudent function to add a new student
     // Resetting the input fields
     e.target.reset();
