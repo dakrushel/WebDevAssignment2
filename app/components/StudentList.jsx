@@ -72,6 +72,10 @@ const Post = () => {
     const fullName = formData.get("fullName").trim();    //This will need to update to take in a full name
     const dob = formData.get("DOB").trim();
     const gpa = formData.get("GPA").trim();
+
+    //Format validation
+    
+
     if (!fullName || !dob || !gpa) {    //Should we allow incomplete submission?
       // Error handling if the fullName is empty
       setError("All fields must be filled out");
@@ -101,28 +105,42 @@ const Post = () => {
               Add Student
             </button>
         </div>
-        <div className="flex w-full items-center">
-          <div className="flex-grow-2 w-7/12">
-              <input
-                className="border p-1 mr-2 text-gray-500 w-5/6"
-                type="text"
-                placeholder="Full Name"
-                name="fullName"
-              />
+
+        {/* Student Full Name */}
+        <div className="flex w-full items-start ml-28 gap-4 ">
+        <div className="w-7/12">
+          <label className="block mb-1 text-gray-700">Student Full Name</label>
+          <input
+            className="border p-1 text-gray-500 w-full"
+            type="text"
+            placeholder="Last name, First name"
+            name="fullName"
+          />
+        </div>
+
+        <div className="flex flex-col w-3/12 gap-2 mb-4">
+          
+          {/* Birth Date section */}
+          <div>
+            <label className="block mb-1 text-gray-700">Birth Date</label>
+            <input
+              className="border p-1 text-gray-500 w-full"
+              type="text"
+              placeholder="MM/DD/YYYY"
+              name="DOB"
+            />
           </div>
-          <div className="flex flex-col w-3/12 gap-1">
-              <input
-                className="border px-1 text-gray-500 w-full"
-                type="text"
-                placeholder="Date of birth"
-                name="DOB"
-              />
-              <input
-                className="border px-1 text-gray-500 w-full"
-                type="text"
-                placeholder="GPA"
-                name="GPA"
-              />
+
+          {/* GPA Section */}
+          <div className="mb-4">
+          <label className="block mb-1 text-gray-700">Student GPA</label>
+                <input
+                  className="border p-1 text-gray-500 w-full"
+                  type="text"
+                  placeholder="4.0"
+                  name="GPA"
+                />
+            </div>
           </div>
           <div className="flex bg-orange-500 w-2/12"></div>
         </div>
