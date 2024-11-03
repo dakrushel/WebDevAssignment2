@@ -258,7 +258,7 @@ const Post = () => {
                     
                     {/* Edit Button */}
                     <button
-                      className="text-white border-2 hover:bg-blue-700 hover:border-blue-900 border-gray-600 py-1 px-2 rounded-lg text-white px-2 rounded-full ml-2"
+                      className="text-white border-2 hover:bg-blue-700 hover:border-blue-900 border-gray-600 py-1 px-4 rounded-lg text-white px-2 rounded-full ml-2"
                       onClick={() => {
                         setEditingId(post.id); // Setting the editing ID
                         setEditingFullName(post.fullName); // Setting the editing fullName
